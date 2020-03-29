@@ -1,4 +1,4 @@
-//  ContentView.swift
+//  SignUpView.swift
 //  combineSignUp
 //
 //  Created by Simón Aparicio on 28/03/2020.
@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct SignUpView: View {
     var body: some View {
         Text("Hello, World!")
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        SignUpView()
     }
 }
