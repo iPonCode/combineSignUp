@@ -9,9 +9,11 @@ import SwiftUI
 
 struct SignUpView: View {
 
-    @State private var username = ""
+    //@State private var username = ""
     @State private var password = ""
     @State private var passwordAgain = ""
+    
+    @ObservedObject private var viewModel = SignUpViewModel()
 
     let mockedCondition = Bool.random()
 
@@ -31,31 +33,31 @@ struct SignUpView: View {
             .padding(.top)
             
             ScrollView {
-                TextFieldView(fieldName: "Nombre de Usuario", fieldValue: $username)
+                TextFieldView(fieldName: "Nombre de Usuario", fieldValue: $viewModel.username)
                     .padding(.top)
                 ValidationView(
                     formText: "Son necesarios al menos 6 caracteres",
-                    conditionChecked: mockedCondition)
+                    conditionChecked: $viewModel.isValidUsername)
 
                 HStack{
                     VStack{
                         TextFieldView(fieldName: "Contraseña", fieldValue: $password, isSecure: true)
-                        ValidationView(
-                            formText: "8+ caracteres",
-                            conditionChecked: mockedCondition)
-                        ValidationView(
-                            formText: "1+ mayúscula",
-                            conditionChecked: !mockedCondition)
-                        ValidationView(
-                            formText: "1+ minúscula",
-                            conditionChecked: mockedCondition)
+//                        ValidationView(
+//                            formText: "8+ caracteres",
+//                            conditionChecked: mockedCondition)
+//                        ValidationView(
+//                            formText: "1+ mayúscula",
+//                            conditionChecked: !mockedCondition)
+//                        ValidationView(
+//                            formText: "1+ minúscula",
+//                            conditionChecked: mockedCondition)
                         Spacer()
                     }
                     VStack{
                         TextFieldView(fieldName: "Repetir", fieldValue: $passwordAgain, isSecure: true)
-                        ValidationView(
-                            formText: "Deben coincidir",
-                            conditionChecked: mockedCondition)
+//                        ValidationView(
+//                            formText: "Deben coincidir",
+//                            conditionChecked: mockedCondition)
                         Spacer()
                     }
                 }
@@ -120,7 +122,7 @@ struct TextFieldView: View {
 struct ValidationView: View {
     
     var formText = ""
-    var conditionChecked = false
+    @Binding var conditionChecked: Bool
 
     var body: some View{
         HStack{
