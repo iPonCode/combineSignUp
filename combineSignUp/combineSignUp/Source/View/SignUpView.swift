@@ -22,35 +22,35 @@ struct SignUpView: View {
                             .opacity(0.2)
                 )
                 Text("Crea tu cuenta")
-                    .font(.system(.body, design: .rounded)).bold()
+                    .font(.system(.largeTitle, design: .rounded)).bold()
             }
-            //.padding(.top)
+            .padding(.top)
             
             ScrollView {
                 TextFieldView(fieldName: "Nombre de Usuario", fieldValue: $viewModel.username)
                     //.padding(.top)
                 ValidationView(
-                    formText: "Son necesarios al menos 6 caracteres",
+                    formText: "Al menos 6 caracteres",
                     conditionChecked: $viewModel.isValidUsername)
 
                 HStack {
                     VStack{
                         TextFieldView(fieldName: "Contraseña", fieldValue: $viewModel.password, isSecure: true)
                         ValidationView(
-                            formText: "8+ caracteres",
+                            formText: "8 caracteres",
                             conditionChecked: $viewModel.isValidPasswordLength)
                         ValidationView(
-                            formText: "1+ mayúscula",
+                            formText: "1 mayúscula",
                             conditionChecked: $viewModel.isValidPasswordUpperCaseLetter)
                         ValidationView(
-                            formText: "1+ minúscula",
+                            formText: "1 minúscula",
                             conditionChecked: $viewModel.isValidPasswordLowerCaseLetter)
                         Spacer()
                     }
                     VStack {
                         TextFieldView(fieldName: "Repetir", fieldValue: $viewModel.passwordAgain, isSecure: true)
                         ValidationView(
-                            formText: "Deben coincidir",
+                            formText: "Son distintos",
                             conditionChecked: $viewModel.areMatchingPasswords)
                         Spacer()
                     }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to use @Published
     
@@ -21,6 +22,8 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
     @Published var isValidPasswordLowerCaseLetter = false
     @Published var areMatchingPasswords = false
     
+    private var cancellableObjects: Set<AnyCancellable> = []
+
     private let minUsername: Int = 6
     private let minPassword: Int = 8
 
@@ -38,7 +41,7 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
                 return username.count >= self.minUsername // and return the result value on a data type expected
         }
         .assign(to: \.isValidUsername, on: self)          // assign it to the corresponding var that will be published
-        //TODO: store
+        .store(in: &cancellableObjects)
 
         // Password minimum lenght
         $password
@@ -47,7 +50,7 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
                 return password.count >= self.minPassword
         }
         .assign(to: \.isValidPasswordLength, on: self)
-        //TODO: store
+        .store(in: &cancellableObjects)
 
         // Password Upper case
         $password
@@ -61,7 +64,7 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
                 }
         }
         .assign(to: \.isValidPasswordUpperCaseLetter, on: self)
-        //TODO: store
+        .store(in: &cancellableObjects)
 
         // Password Upper case
         $password
@@ -75,8 +78,16 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
                 }
         }
         .assign(to: \.isValidPasswordLowerCaseLetter, on: self)
-        //TODO: store
-        
-        //TODO: Combine the two password published vars
+        .store(in: &cancellableObjects)
+
+        // Combine the two password published vars
+        Publishers.CombineLatest($password, $passwordAgain)
+            .receive(on: RunLoop.main)
+            .map{ (pass, passAgain) in
+                return !pass.isEmpty && pass == passAgain //&& !passAgain.isEmpty
+        }
+        .assign(to: \.areMatchingPasswords, on: self)
+        .store(in: &cancellableObjects)
     }
+
 }
