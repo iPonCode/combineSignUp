@@ -6,5 +6,5 @@
 - [x] Basic Form displaying a sign up screen
 - [ ] Form design
 ##### Screenshots
-|![pending-combineSignUp-screenshot]()|||
+|[![combineSignUp](readme-img/combineSignUp-screenshot-dark-mode-01-h558px.PNG)](https://github.com/ssuperw/combineSignUp)|[![combineSignUp](readme-img/combineSignUp-screenshot-light-mode-01-h558px.PNG)](https://github.com/ssuperw/combineSignUp)|[![combineSignUp](readme-img/combineSignUp-screenshot-light-mode-02-h558px.PNG)](https://github.com/ssuperw/combineSignUp)|
 |-|-|-|
