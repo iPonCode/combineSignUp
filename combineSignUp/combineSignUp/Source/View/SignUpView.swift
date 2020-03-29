@@ -9,17 +9,13 @@ import SwiftUI
 
 struct SignUpView: View {
 
-    @State private var username = ""
-    @State private var password = ""
-    @State private var passwordAgain = ""
-
-    let mockedCondition = Bool.random()
+    @ObservedObject private var viewModel = SignUpViewModel()
 
     var body: some View {
-        VStack{
+        VStack {
             HStack {
                 Image("LaunchScreen").resizable().aspectRatio(contentMode: .fit)
-                    .frame(width: 80, height: 80).cornerRadius(15)
+                    .frame(width: 65, height: 65).cornerRadius(15)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
                             .foregroundColor(.gray)
@@ -31,31 +27,31 @@ struct SignUpView: View {
             .padding(.top)
             
             ScrollView {
-                TextFieldView(fieldName: "Nombre de Usuario", fieldValue: $username)
-                    .padding(.top)
+                TextFieldView(fieldName: "Nombre de Usuario", fieldValue: $viewModel.username)
+                    //.padding(.top)
                 ValidationView(
-                    formText: "Son necesarios al menos 6 caracteres",
-                    conditionChecked: mockedCondition)
+                    formText: "Al menos 6 caracteres",
+                    conditionChecked: $viewModel.isValidUsername)
 
-                HStack{
+                HStack {
                     VStack{
-                        TextFieldView(fieldName: "Contraseña", fieldValue: $password, isSecure: true)
+                        TextFieldView(fieldName: "Contraseña", fieldValue: $viewModel.password, isSecure: true)
                         ValidationView(
-                            formText: "8+ caracteres",
-                            conditionChecked: mockedCondition)
+                            formText: "8 caracteres",
+                            conditionChecked: $viewModel.isValidPasswordLength)
                         ValidationView(
-                            formText: "1+ mayúscula",
-                            conditionChecked: !mockedCondition)
+                            formText: "1 mayúscula",
+                            conditionChecked: $viewModel.isValidPasswordUpperCaseLetter)
                         ValidationView(
-                            formText: "1+ minúscula",
-                            conditionChecked: mockedCondition)
+                            formText: "1 minúscula",
+                            conditionChecked: $viewModel.isValidPasswordLowerCaseLetter)
                         Spacer()
                     }
-                    VStack{
-                        TextFieldView(fieldName: "Repetir", fieldValue: $passwordAgain, isSecure: true)
+                    VStack {
+                        TextFieldView(fieldName: "Repetir", fieldValue: $viewModel.passwordAgain, isSecure: true)
                         ValidationView(
-                            formText: "Deben coincidir",
-                            conditionChecked: mockedCondition)
+                            formText: "Son distintos",
+                            conditionChecked: $viewModel.areMatchingPasswords)
                         Spacer()
                     }
                 }
@@ -74,19 +70,20 @@ struct SignUpView: View {
                         .cornerRadius(8)
                 }
                 
-                HStack{
+                HStack {
                     Text("¿Tienes una cuenta?")
-                        .font(.system(.body, design: .rounded))
-                        .bold()
+                        .font(.system(.body, design: .rounded)).bold()
+                        .foregroundColor(.secondary)
                     Button(action: {
                         //TODO: to login
                     }){
                         Text("Entra ahora")
-                            .font(.system(.headline))
+                            .font(.system(.headline, design: .rounded))
                             .foregroundColor(.purple)
                     }
                 }.padding()
-            }.padding()
+            }.padding(.horizontal)
+            Spacer()
         }
     }
 }
@@ -99,11 +96,11 @@ struct TextFieldView: View {
     
     var body: some View{
         VStack{
-            if isSecure{
+            if isSecure {
                 SecureField(fieldName, text: $fieldValue)
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .padding(.horizontal)
-            }else{
+            } else {
                 TextField(fieldName, text: $fieldValue)
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .padding(.horizontal)
@@ -120,9 +117,9 @@ struct TextFieldView: View {
 struct ValidationView: View {
     
     var formText = ""
-    var conditionChecked = false
+    @Binding var conditionChecked: Bool
 
-    var body: some View{
+    var body: some View {
         HStack{
             Image(systemName: conditionChecked ? "checkmark.circle" : "xmark.circle")
                 .foregroundColor(conditionChecked ? .blue : .pink)
