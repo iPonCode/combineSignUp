@@ -17,11 +17,13 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
     // Form validation
     @Published var isValidUsername = false
     @Published var isValidPasswordLength = false
-    @Published var isValidPasswordCapitalLetter = false
+    @Published var isValidPasswordUpperCaseLetter = false
+    @Published var isValidPasswordLowerCaseLetter = false
     @Published var areMatchingPasswords = false
     
-    private let maxUserName: Int = 6
-    
+    private let minUsername: Int = 6
+    private let minPassword: Int = 8
+
     init() {
         // TODO: validation logic
         // All SwiftUI controls can be subscribers, so a Text can listen to changes and updates its style itself
@@ -31,12 +33,50 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
         // if is valid or not. Finally this transformation must be assiged to its corresponding bool var on its own class
         
         $username
-            .receive(on: RunLoop.main)                      // the suscriber receive changes
-            .map{ username in                               // make the necessary transformations
-                return username.count >= self.maxUserName   // and return the result value on a data type expected
+            .receive(on: RunLoop.main)                    // the suscriber receive changes
+            .map{ username in                             // make the necessary transformations
+                return username.count >= self.minUsername // and return the result value on a data type expected
         }
-        .assign(to: \.isValidUsername, on: self)            // assignit to the corresponding var that will be published
-        // TODO: store
+        .assign(to: \.isValidUsername, on: self)          // assign it to the corresponding var that will be published
+        //TODO: store
+
+        // Password minimum lenght
+        $password
+            .receive(on: RunLoop.main)
+            .map{ password in
+                return password.count >= self.minPassword
+        }
+        .assign(to: \.isValidPasswordLength, on: self)
+        //TODO: store
+
+        // Password Upper case
+        $password
+            .receive(on: RunLoop.main)
+            .map{ password in
+                let regExPattern = "[A-Z]" // RegEx with Uppercased char
+                if let _ = password.range(of: regExPattern, options: .regularExpression) {
+                    return true
+                } else {
+                    return false
+                }
+        }
+        .assign(to: \.isValidPasswordUpperCaseLetter, on: self)
+        //TODO: store
+
+        // Password Upper case
+        $password
+            .receive(on: RunLoop.main)
+            .map{ password in
+                let regExPattern = "[a-z]" // RegEx with Lowercased char
+                if let _ = password.range(of: regExPattern, options: .regularExpression) {
+                    return true
+                } else {
+                    return false
+                }
+        }
+        .assign(to: \.isValidPasswordLowerCaseLetter, on: self)
+        //TODO: store
         
+        //TODO: Combine the two password published vars
     }
 }
