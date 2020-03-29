@@ -41,7 +41,7 @@ class SignUpViewModel: ObservableObject{ // Needs to conform ObservableObject to
                 return username.count >= self.minUsername // and return the result value on a data type expected
         }
         .assign(to: \.isValidUsername, on: self)          // assign it to the corresponding var that will be published
-        .store(in: &cancellableObjects)
+        .store(in: &cancellableObjects)                   // store the @Published reference in the cancelableObects Set (needs Combine import)
 
         // Password minimum lenght
         $password
