@@ -13,6 +13,8 @@ struct SignUpView: View {
     @State private var password = ""
     @State private var passwordAgain = ""
 
+    let mockedCondition = Bool.random()
+
     var body: some View {
         VStack{
             HStack {
@@ -21,7 +23,7 @@ struct SignUpView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
                             .foregroundColor(.gray)
-                            .opacity(0.25)
+                            .opacity(0.2)
                 )
                 Text("Crea tu cuenta")
                     .font(.system(.largeTitle, design: .rounded)).bold()
@@ -31,9 +33,31 @@ struct SignUpView: View {
             ScrollView {
                 TextFieldView(fieldName: "Nombre de Usuario", fieldValue: $username)
                     .padding(.top)
+                ValidationView(
+                    formText: "Son necesarios al menos 6 caracteres",
+                    conditionChecked: mockedCondition)
+
                 HStack{
-                    TextFieldView(fieldName: "Contraseña", fieldValue: $password, isSecure: true)
-                    TextFieldView(fieldName: "Confirmar", fieldValue: $passwordAgain, isSecure: true)
+                    VStack{
+                        TextFieldView(fieldName: "Contraseña", fieldValue: $password, isSecure: true)
+                        ValidationView(
+                            formText: "8+ caracteres",
+                            conditionChecked: mockedCondition)
+                        ValidationView(
+                            formText: "1+ mayúscula",
+                            conditionChecked: !mockedCondition)
+                        ValidationView(
+                            formText: "1+ minúscula",
+                            conditionChecked: mockedCondition)
+                        Spacer()
+                    }
+                    VStack{
+                        TextFieldView(fieldName: "Repetir", fieldValue: $passwordAgain, isSecure: true)
+                        ValidationView(
+                            formText: "Deben coincidir",
+                            conditionChecked: mockedCondition)
+                        Spacer()
+                    }
                 }
                 .padding(.bottom)
 
@@ -93,6 +117,24 @@ struct TextFieldView: View {
     }
 }
 
+struct ValidationView: View {
+    
+    var formText = ""
+    var conditionChecked = false
+
+    var body: some View{
+        HStack{
+            Image(systemName: conditionChecked ? "checkmark.circle" : "xmark.circle")
+                .foregroundColor(conditionChecked ? .blue : .pink)
+            Text(formText)
+                .font(.system(.body, design: .rounded))
+                .foregroundColor(.secondary)
+                .strikethrough(conditionChecked)
+            Spacer()
+        }
+        .padding(.horizontal)
+    }
+}
 
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
